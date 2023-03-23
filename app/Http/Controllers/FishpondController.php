@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fish;
 use App\Models\Fishpond;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class FishpondController extends Controller
     public function index()
     {
         $kolams = Fishpond::all();
+        
 
         return view('kolam.index', compact('kolams'));
     }
@@ -57,8 +59,9 @@ class FishpondController extends Controller
     public function show($id)
     {
         $kolam = Fishpond::find($id);
+        $ikans = Fish::all();
 
-        return view('kolam.show', compact('kolam'));
+        return view('kolam.show', compact('kolam', 'ikans'));
     }
 
     /**
@@ -107,5 +110,32 @@ class FishpondController extends Controller
         $kolam->delete();
 
         return redirect()->route('kolam.index')->with('success', 'Kolam berhasil dihapus');
+    }
+
+    public function addFish($id)
+    {
+        $kolam = Fishpond::findOrFail($id);
+        
+        return view('kolam.add', compact('kolam'));
+    }
+
+    public function addToDBFish(Request $request)
+    {
+        // dd($request);
+        $validatedData = $request->validate([
+            'fishpond_id' => 'required',
+            'asal_ikan' => 'string',
+            'jumlah_ekor' => 'required|integer',
+            'jumlah_bobot' => 'required|integer',
+            'min' => 'required|integer',
+            'max' => 'required|integer',
+            'sortir_berikut' => 'required|date',
+            'bobot_pakan' => 'required|integer',
+            'keterangan' => 'string',
+        ]);
+        
+        Fish::create($validatedData);
+        
+        return redirect()->route('kolam.index')->with('success','Data ikan berhasil ditambahkan');
     }
 }

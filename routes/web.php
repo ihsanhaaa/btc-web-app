@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\FeedController;
-use App\Http\Controllers\FishController;
 use App\Http\Controllers\FishpondController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +21,22 @@ Route::get('/', function () {
 });
 
 Route::resource('/dashboard/pakan', FeedController::class);
-Route::resource('/dashboard/kolam', FishpondController::class);
+
+
+
+
+Route::get('/dashboard/kolam', [FishpondController::class, 'index'])->name('kolam.index');
+Route::get('/dashboard/kolam/create', [FishpondController::class, 'create'])->name('kolam.create');
+Route::post('/dashboard/kolam', [FishpondController::class, 'store'])->name('kolam.store');
+Route::get('/dashboard/kolam/{id}/edit', [FishpondController::class, 'edit'])->name('kolam.edit');
+Route::patch('/dashboard/kolam/{id}', [FishpondController::class, 'update'])->name('kolam.update');
+Route::delete('/dashboard/kolam/{id}', [FishpondController::class, 'destroy'])->name('kolam.destroy');
+
+Route::get('/dashboard/kolam/{id}', [FishpondController::class, 'show'])->name('kolam.show');
+
+Route::get('/dashboard/kolam/data-ikan/{id}/tambah', [FishpondController::class, 'addFish'])->name('addFish.create');
+Route::post('/dashboard/kolam/data-ikan/', [FishpondController::class, 'addToDBFish'])->name('addToDBFish.create');
+
 
 Auth::routes();
 

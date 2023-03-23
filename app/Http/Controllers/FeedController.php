@@ -42,8 +42,9 @@ class FeedController extends Controller
         $validatedData = $request->validate([
             'uraian' => 'required|string',
             'image' => 'required|image|file|max:3024',
-            'pemasukan' => 'integer',
-            'pengeluaran' => 'integer',
+            'harga' => 'required|integer',
+            'total' => 'nullable|integer',
+            'keterangan' => 'nullable|string',
         ]);
 
         if ($request->hasFile('image')) {
@@ -52,6 +53,11 @@ class FeedController extends Controller
             $request->image->move(storage_path('/../public/image'), $fileName);
             $validatedData['image'] = $fileName;
         }
+
+        $total = Feed::all()->sum('harga');
+        // dd($total);
+
+        $validatedData['total'] = $request->input('harga') + $total;
 
         Feed::create($validatedData);
 

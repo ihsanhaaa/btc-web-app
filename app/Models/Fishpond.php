@@ -10,4 +10,9 @@ class Fishpond extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function dataIkan()
+    {
+        return $this->hasMany(Fish::class);
+    }
 }

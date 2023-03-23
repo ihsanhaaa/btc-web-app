@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('fish', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('fishpond_id');
             $table->string('asal_ikan');
             $table->integer('jumlah_ekor');
             $table->float('jumlah_bobot', 8, 2);

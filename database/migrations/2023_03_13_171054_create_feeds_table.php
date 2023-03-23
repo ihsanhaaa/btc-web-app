@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('uraian');
             $table->string('image');
-            $table->integer('pemasukan');
-            $table->integer('pengeluaran');
-            $table->integer('saldo')->nullable();
+            $table->integer('harga');
+            $table->integer('total');
+            $table->longText('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -10,4 +10,9 @@ class Fish extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function fishpond()
+    {
+        return $this->belongsTo(Fishpond::class);
+    }
 }

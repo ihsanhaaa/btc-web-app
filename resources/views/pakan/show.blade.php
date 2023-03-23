@@ -17,23 +17,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Pemasukan</label>
-                        <input type="text" class="form-control" value="Rp. {{ number_format((float) $pakan->pemasukan) }}" disabled>
+                        <label>Harga</label>
+                        <input type="text" class="form-control" value="Rp. {{ number_format((float) $pakan->harga) }}" disabled>
                     </div>
 
                     <div class="form-group">
-                        <label>Pengeluaran</label>
-                        <input type="text" class="form-control" value="Rp. {{ number_format((float) $pakan->pengeluaran) }}" disabled>
+                        <label>Total</label>
+                        <input type="text" class="form-control" value="Rp. {{ number_format((float) $pakan->total) }}" disabled>
                     </div>
 
                     <div class="form-group">
                         <label>Tanggal Dibuat</label>
                         <input type="text" class="form-control" value="{{ $pakan->created_at }}" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Saldo Total</label>
-                        <input type="text" class="form-control" value="Rp. {{ number_format((float) $pakan->saldo) }}" disabled>
                     </div>
 
                     <a class="btn btn-primary" href="{{ route('pakan.index') }}">Kembali</a>
