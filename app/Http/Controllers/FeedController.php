@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Feed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FeedController extends Controller
 {
@@ -16,7 +17,7 @@ class FeedController extends Controller
     {
         $pakans = Feed::all();
 
-        return view('pakan.index', compact('pakans'));
+        return view('kolam.pakan.index', compact('pakans'));
     }
 
     /**
@@ -54,11 +55,6 @@ class FeedController extends Controller
             $validatedData['image'] = $fileName;
         }
 
-        $total = Feed::all()->sum('harga');
-        // dd($total);
-
-        $validatedData['total'] = $request->input('harga') + $total;
-
         Feed::create($validatedData);
 
         return redirect()->route('pakan.index')
@@ -75,7 +71,7 @@ class FeedController extends Controller
     {
         $pakan = Feed::find($id);
 
-        return view('pakan.show', compact('pakan'));
+        return view('kolam.pakan.show', compact('pakan'));
     }
 
     /**

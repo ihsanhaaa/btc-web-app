@@ -35,7 +35,7 @@
 
     <div class="connect-container align-content-stretch d-flex flex-wrap">
         <div class="page-sidebar">
-            <div class="logo-box"><a href="#" class="logo-text">Connect</a><a href="#" id="sidebar-close"><i
+            <div class="logo-box"><a href="{{ route('home') }}" class="logo-text">Connect</a><a href="#" id="sidebar-close"><i
                         class="material-icons">close</i></a> <a href="#" id="sidebar-state"><i
                         class="material-icons">adjust</i><i
                         class="material-icons compact-sidebar-icon">panorama_fish_eye</i></a></div>
@@ -51,22 +51,55 @@
                     @endif
                 @else
                     <ul class="accordion-menu">
+                        <li>
+                            <a href="{{ route('home') }}" class="active"><i
+                                    class="material-icons-outlined">dashboard</i>Dashboard</a>
+                        </li>
                         <li class="sidebar-title">
-                            Apps
+                            Manajemen Data Umum
                         </li>
                         <li>
-                            <a href="index.html" class="active"><i
-                                    class="material-icons-outlined">dashboard</i>Dashboard</a>
+                            <a href="{{ route('pengeluaran-umum.index') }}"><i class="material-icons-outlined">inbox</i>Data Umum</a>
+                        </li>
+
+                        <li class="sidebar-title">
+                            Manajemen Kolam
                         </li>
                         <li>
                             <a href="{{ route('kolam.index') }}"><i class="material-icons-outlined">inbox</i>Data Kolam</a>
                         </li>
                         <li>
-                            <a href="{{ route('pakan.index') }}"><i class="material-icons-outlined">account_circle</i>Data Pakan</a>
+                            <a href="{{ route('pemasukan-ikan.index') }}"><i class="material-icons-outlined">inbox</i>Pemasukan</a>
                         </li>
                         <li>
-                            <a href="file-manager.html"><i class="material-icons">cloud_queue</i>Data Ikan</a>
+                            <a href="{{ route('pengeluaran-ikan.index') }}"><i class="material-icons-outlined">inbox</i>Pengeluaran</a>
                         </li>
+
+                        <li class="sidebar-title">
+                            Manajemen Keratom
+                        </li>
+                        <li>
+                            <a href="{{ route('pemasukan-keratom.index') }}"><i class="material-icons-outlined">inbox</i>Pemasukan</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('pengeluaran-keratom.index') }}"><i class="material-icons-outlined">inbox</i>Pengeluaran</a>
+                        </li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
                     </ul>
                 @endguest
 
@@ -155,6 +188,8 @@
     <script src="{{ asset('assets/plugins/DataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('assets/js/connect.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/datatables.js') }}"></script>
+
+    @stack('javascript-plugins')
 
 </body>
 

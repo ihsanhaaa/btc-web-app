@@ -17,13 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('fishpond_id');
             $table->string('asal_ikan');
-            $table->integer('jumlah_ekor');
             $table->float('jumlah_bobot', 8, 2);
-            $table->integer('min');
-            $table->integer('max');
             $table->date('sortir_berikut');
-            $table->float('bobot_pakan', 8, 2);
-            $table->longText('keterangan');
+            $table->longText('keterangan')->nullable();
             $table->timestamps();
         });
     }

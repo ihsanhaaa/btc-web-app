@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('fishponds', function (Blueprint $table) {
             $table->id();
             $table->string('nomor_kolam');
+            $table->string('ukuran_ikan');
             $table->timestamps();
         });
     }

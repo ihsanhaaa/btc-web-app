@@ -22,11 +22,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Total</label>
-                        <input type="text" class="form-control" value="Rp. {{ number_format((float) $pakan->total) }}" disabled>
-                    </div>
-
-                    <div class="form-group">
                         <label>Tanggal Dibuat</label>
                         <input type="text" class="form-control" value="{{ $pakan->created_at }}" disabled>
                     </div>

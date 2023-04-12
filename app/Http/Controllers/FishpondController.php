@@ -39,12 +39,15 @@ class FishpondController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $this->validate($request, [
             'nomor_kolam' => 'string',
+            'ukuran_ikan' => 'required|string',
         ]);
         
         $kolam = new Fishpond();
         $kolam->nomor_kolam = $request->input('nomor_kolam');
+        $kolam->ukuran_ikan = $request->input('ukuran_ikan');
         $kolam->save();
         
         return redirect()->route('kolam.index')->with('success','Kolam berhasil ditambahkan');
@@ -90,9 +93,11 @@ class FishpondController extends Controller
 
         $this->validate($request, [
             'nomor_kolam' => 'string',
+            'ukuran_ikan' => 'required|string',
         ]);
 
         $kolam->nomor_kolam = $request->input('nomor_kolam');
+        $kolam->ukuran_ikan = $request->input('ukuran_ikan');
         $kolam->save();
         
         return redirect()->route('kolam.index')->with('success','Kolam berhasil diedit');
@@ -115,8 +120,11 @@ class FishpondController extends Controller
     public function addFish($id)
     {
         $kolam = Fishpond::findOrFail($id);
+        $data = Fishpond::all();
+
+        // dd($data);
         
-        return view('kolam.add', compact('kolam'));
+        return view('kolam.add', compact('kolam', 'data'));
     }
 
     public function addToDBFish(Request $request)
@@ -124,14 +132,10 @@ class FishpondController extends Controller
         // dd($request);
         $validatedData = $request->validate([
             'fishpond_id' => 'required',
-            'asal_ikan' => 'string',
-            'jumlah_ekor' => 'required|integer',
+            'asal_ikan' => 'required|string',
             'jumlah_bobot' => 'required|integer',
-            'min' => 'required|integer',
-            'max' => 'required|integer',
             'sortir_berikut' => 'required|date',
-            'bobot_pakan' => 'required|integer',
-            'keterangan' => 'string',
+            'keterangan' => 'nullable|string',
         ]);
         
         Fish::create($validatedData);

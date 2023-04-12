@@ -10,14 +10,18 @@
                     <div class="form-group">
                         <label for="nomor_kolam">Nomor Kolam</label>
                         <input type="text" class="form-control" name="nomor_kolam" id="nomor_kolam"
-                            placeholder="Nomor Kolam" value="{{ old('nomor_kolam', $kolam->nomor_kolam) }}">
+                            placeholder="Nomor Kolam" value="{{ old('nomor_kolam', $kolam->nomor_kolam) }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomor_kolam">Ukuran Ikan (cm)</label>
+                        <input type="text" class="form-control" name="nomor_kolam" id="nomor_kolam"
+                            placeholder="Nomor Kolam" value="{{ old('nomor_kolam', $kolam->ukuran_ikan) }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="nomor_kolam">Tanggal Dibuat</label>
                         <input type="text" class="form-control" name="nomor_kolam" id="nomor_kolam"
-                            placeholder="Nomor Kolam" value="{{ old('nomor_kolam', $kolam->created_at->format('M d, Y')) }}">
+                            placeholder="Nomor Kolam" value="{{ old('nomor_kolam', $kolam->created_at->format('M d, Y')) }}" readonly>
                     </div>
-
                 </div>
             </div>
 
@@ -32,10 +36,7 @@
                                 <th>No</th>
                                 <th>Tanggal Sortir</th>
                                 <th>Asal Ikan</th>
-                                <th>Jumlah Ekor</th>
                                 <th>Jumlah Bobot</th>
-                                <th>Panjang Min</th>
-                                <th>Panjang Max</th>
                                 <th>Sortir Berikutnya</th>
                             </tr>
                         </thead>
@@ -45,17 +46,30 @@
                                     <tr>
                                         <td>{{ $ikan->id }}</td>
                                         <td>{{ $ikan->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $ikan->asal_ikan }}</td>
-                                        <td>{{ $ikan->jumlah_ekor }}</td>
-                                        <td>{{ $ikan->jumlah_bobot }}</td>
-                                        <td>{{ $ikan->min }}</td>
-                                        <td>{{ $ikan->max }}</td>
+                                        <td>{{ $ikan->fishpond->nomor_kolam }}</td>
+                                        <td>{{ $ikan->jumlah_bobot }} Kg</td>
                                         <td>{{ date('M d, Y', strtotime($ikan->sortir_berikut)) }}</td>
-
                                     </tr>
                                 @endif
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            @php
+                                $total_bobot = 0;
+                                foreach ($ikans as $ikan) {
+                                    if ($ikan->fishpond_id == $kolam->id) {
+                                        $total_bobot += $ikan->jumlah_bobot;
+                                    }
+                                }
+                                $bobot_pakan = $total_bobot * 0.03;
+                            @endphp
+                            <tr>
+                                <th></th>
+                                <th><strong>Total Bobot: {{ $total_bobot }} Kg</strong></th>
+                                <th>Bobot Pakan (3%): {{ $bobot_pakan }} Kg</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
 
                     <a class="btn btn-primary my-4" href="{{ route('kolam.index') }}">Kembali</a>

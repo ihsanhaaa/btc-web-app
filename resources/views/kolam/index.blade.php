@@ -28,7 +28,9 @@
                             @foreach ($kolams as $kolam)
                                 <tr>
                                     <td>{{ $kolam->id }}</td>
-                                    <td>{{ $kolam->nomor_kolam }}</td>
+                                    <td>
+                                        <a href="{{ route('kolam.show', $kolam->id) }}" style="color: #7d8581;">{{ $kolam->nomor_kolam }}</a>
+                                    </td>
                                     <td>{{ $kolam->created_at->format('M d, Y') }}</td>
                                     <td>
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"

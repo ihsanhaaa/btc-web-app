@@ -1,12 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @if (count($errors) > 0)
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @foreach ($errors->all() as $error)
+                <strong>{{ $error }}</strong><br>
+            @endforeach
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-xl">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Tambah Data</h5>
-                    <form action="{{ route('pakan.store') }}" class="needs-validation" method="POST"
+                    <form action="{{ route('pengeluaran-umum.store') }}" class="needs-validation" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
@@ -16,8 +25,8 @@
                         </div>
                         <div class="form-group">
                             <label for="harga">Harga</label>
-                            <input type="number" class="form-control" name="harga" id="harga"
-                                placeholder="Harga" value="{{ old('harga') }}">
+                            <input type="number" class="form-control" name="harga" id="harga" placeholder="Harga"
+                                value="{{ old('harga') }}">
                         </div>
                         <div class="form-group">
                             <label for="image">Foto Nota</label>

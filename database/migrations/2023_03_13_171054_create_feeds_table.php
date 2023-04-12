@@ -16,9 +16,8 @@ return new class extends Migration
         Schema::create('feeds', function (Blueprint $table) {
             $table->id();
             $table->string('uraian');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('harga');
-            $table->integer('total');
             $table->longText('keterangan')->nullable();
             $table->timestamps();
         });
