@@ -60,11 +60,25 @@ class HomeController extends Controller
             ->whereYear('created_at', '=', $currentYear)
             ->sum('harga');
 
+        $spendingFishThisMonthKolam = DB::table('spending_fish')->where('jenis', '=', 'Kolam')
+            ->whereMonth('created_at', '=', $currentMonth)
+            ->whereYear('created_at', '=', $currentYear)
+            ->sum('harga');
+
+        $spendingFishThisMonthPakan = DB::table('spending_fish')->where('jenis', '=', 'Pakan')
+            ->whereMonth('created_at', '=', $currentMonth)
+            ->whereYear('created_at', '=', $currentYear)
+            ->sum('harga');
+
         $totalSpendingFish = DB::table('spending_fish')->sum('harga');
 
         // bulan sebelumnya
         $lastMonth = date('m', strtotime('-1 month'));
         $lastYear = date('Y', strtotime('-1 month'));
+
+        // Get current month and year
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
 
         $totalIncomeFishLastMonth = DB::table('spending_fish')
             ->whereMonth('created_at', '=', $lastMonth)
@@ -106,6 +120,47 @@ class HomeController extends Controller
             ->whereYear('created_at', '=', $lastYear)
             ->sum('harga');
 
-        return view('home', compact('chartData', 'totalSpending', 'totalIncome', 'spendingFishThisMonth', 'totalSpendingFish', 'namaBulan', 'totalIncomeFishLastMonth', 'spendingKeratomThisMonth', 'totalSpendingKeratom', 'totalIncomeKeratomLastMonth', 'spendingUmumThisMonth', 'totalSpendingUmum', 'totalIncomeUmumLastMonth'));
+        // pendapatan
+        $totalIncomeFish = DB::table('income_fish')->sum('total_penjualan');
+        $totalIncomeKeratom = DB::table('income_keratoms')->sum('total_penjualan');
+
+        $totalIncomeThisMonthFish = IncomeFish::whereMonth('tanggal_jual', $currentMonth)
+            ->whereYear('tanggal_jual', $currentYear)
+            ->sum('total_penjualan');
+
+        $totalIncomeThisMonthKeratom = IncomeKeratom::whereMonth('tanggal_jual', $currentMonth)
+            ->whereYear('tanggal_jual', $currentYear)
+            ->sum('total_penjualan');
+
+
+        // data
+        // menghitung jumlah harga dari tabel daily_spendings, spending_fish, dan spending_keratoms
+        $spendingThisYear = DB::table('daily_spendings')
+        ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(harga) as total_harga'))
+        ->groupBy('year', 'month')
+        ->get();
+
+        $spendingFishThisYear = DB::table('spending_fish')
+        ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(harga) as total_harga'))
+        ->groupBy('year', 'month')
+        ->get();
+
+        $spendingKeratomsThisYear = DB::table('spending_keratoms')
+        ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(harga) as total_harga'))
+        ->groupBy('year', 'month')
+        ->get();
+
+        // menghitung total penjualan dari tabel income_fish dan income_keratoms
+        $incomeThisYear = DB::table('income_fish')
+        ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_penjualan) as total_penjualan'))
+        ->groupBy('year', 'month')
+        ->get();
+
+        $incomeKeratomsThisYear = DB::table('income_keratoms')
+        ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_penjualan) as total_penjualan'))
+        ->groupBy('year', 'month')
+        ->get();
+
+        return view('home', compact('chartData', 'spendingFishThisMonthKolam', 'spendingFishThisMonthPakan', 'totalIncomeThisMonthKeratom', 'totalIncomeKeratom', 'totalIncomeFish', 'totalSpending', 'totalIncome', 'spendingFishThisMonth', 'totalSpendingFish', 'namaBulan', 'totalIncomeFishLastMonth', 'spendingKeratomThisMonth', 'totalSpendingKeratom', 'totalIncomeKeratomLastMonth', 'spendingUmumThisMonth', 'totalSpendingUmum', 'totalIncomeUmumLastMonth', 'spendingThisYear', 'incomeThisYear', 'totalIncomeThisMonthFish'));
     }
 }
