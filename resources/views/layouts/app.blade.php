@@ -127,9 +127,12 @@
                                         class="material-icons dropdown-icon">keyboard_arrow_down</i>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Data Kolam</a>
-                                    <a class="dropdown-item" href="#">Data Pakan</a>
-                                    <a class="dropdown-item" href="#">Data Ikan</a>
+                                    <a class="dropdown-item" href="{{ route('pengeluaran-umum.index') }}">Data Umum</a>
+                                    <a class="dropdown-item" href="{{ route('kolam.index') }}">Data Kolam</a>
+                                    <a class="dropdown-item" href="{{ route('pemasukan-ikan.index') }}">Pemasukan Kolam</a>
+                                    <a class="dropdown-item" href="{{ route('pengeluaran-ikan.index') }}">Pengeluaran Kolam</a>
+                                    <a class="dropdown-item" href="{{ route('pemasukan-keratom.index') }}">Pemasukan Keratom</a>
+                                    <a class="dropdown-item" href="{{ route('pengeluaran-keratom.index') }}">Pengeluaran Keratom</a>
                                     <div class="dropdown-divider"></div>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"

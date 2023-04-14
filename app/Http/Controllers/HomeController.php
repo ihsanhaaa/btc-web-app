@@ -161,6 +161,119 @@ class HomeController extends Controller
         ->groupBy('year', 'month')
         ->get();
 
-        return view('home', compact('chartData', 'spendingFishThisMonthKolam', 'spendingFishThisMonthPakan', 'totalIncomeThisMonthKeratom', 'totalIncomeKeratom', 'totalIncomeFish', 'totalSpending', 'totalIncome', 'spendingFishThisMonth', 'totalSpendingFish', 'namaBulan', 'totalIncomeFishLastMonth', 'spendingKeratomThisMonth', 'totalSpendingKeratom', 'totalIncomeKeratomLastMonth', 'spendingUmumThisMonth', 'totalSpendingUmum', 'totalIncomeUmumLastMonth', 'spendingThisYear', 'incomeThisYear', 'totalIncomeThisMonthFish'));
+        //datas
+        // Mengambil total penjualan dari kedua tabel
+        $incomeKeratoms = DB::table('income_keratoms')
+            ->selectRaw('MONTH(tanggal_jual) as month, SUM(total_penjualan) as total')
+            ->whereYear('tanggal_jual', '=', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $incomeFish = DB::table('income_fish')
+            ->selectRaw('MONTH(tanggal_jual) as month, SUM(total_penjualan) as total')
+            ->whereYear('tanggal_jual', '=', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        // Menggabungkan total penjualan dari kedua tabel
+        $income = collect([]);
+        foreach ($incomeKeratoms as $item) {
+            $income->push([
+                'month' => $item->month,
+                'total' => $item->total,
+            ]);
+        }
+
+        foreach ($incomeFish as $item) {
+            $key = $income->search(function ($value) use ($item) {
+                return $value['month'] == $item->month;
+            });
+
+            if ($key === false) {
+                $income->push([
+                    'month' => $item->month,
+                    'total' => $item->total,
+                ]);
+            } else {
+                $income[$key]['total'] += $item->total;
+            }
+        }
+
+        // Mengubah format data menjadi array
+        $labelsIncome = [];
+        $dataIncome = [];
+        foreach ($income as $item) {
+            $labelsIncome[] = date('F', mktime(0, 0, 0, $item['month'], 1));
+            $dataIncome[] = $item['total'];
+        }
+
+        // dd($dataIncome);
+
+        //datas spending
+        //datas
+        // Mengambil total penjualan dari kedua tabel
+        $spendingDaily = DB::table('daily_spendings')
+            ->selectRaw('MONTH(created_at) as month, SUM(harga) as total')
+            ->whereYear('created_at', '=', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $spendingFish = DB::table('spending_fish')
+            ->selectRaw('MONTH(created_at) as month, SUM(harga) as total')
+            ->whereYear('created_at', '=', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $spendingKeratom = DB::table('spending_keratoms')
+            ->selectRaw('MONTH(created_at) as month, SUM(harga) as total')
+            ->whereYear('created_at', '=', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        // Menggabungkan total penjualan dari kedua tabel
+        $spending = collect([]);
+        foreach ($spendingKeratoms as $item) {
+            $spending->push([
+                'month' => $item->month,
+                'total' => $item->total,
+            ]);
+        }
+
+        foreach ($spendingDaily as $item) {
+            $spending->push([
+                'month' => $item->month,
+                'total' => $item->total,
+            ]);
+        }
+
+        foreach ($spendingFish as $item) {
+            $key = $spending->search(function ($value) use ($item) {
+                return $value['month'] == $item->month;
+            });
+
+            if ($key === false) {
+                $spending->push([
+                    'month' => $item->month,
+                    'total' => $item->total,
+                ]);
+            } else {
+                $spending[$key]['total'] += $item->total;
+            }
+        }
+
+        // Mengubah format data menjadi array
+        $labelsSpending = [];
+        $dataSpending = [];
+        foreach ($spending as $item) {
+            $labelsSpending[] = date('F', mktime(0, 0, 0, $item['month'], 1));
+            $dataSpending[] = $item['total'];
+        }
+
+        return view('home', compact('chartData', 'labelsIncome', 'dataIncome','labelsSpending', 'dataSpending', 'spendingFishThisMonthKolam', 'spendingFishThisMonthPakan', 'totalIncomeThisMonthKeratom', 'totalIncomeKeratom', 'totalIncomeFish', 'totalSpending', 'totalIncome', 'spendingFishThisMonth', 'totalSpendingFish', 'namaBulan', 'totalIncomeFishLastMonth', 'spendingKeratomThisMonth', 'totalSpendingKeratom', 'totalIncomeKeratomLastMonth', 'spendingUmumThisMonth', 'totalSpendingUmum', 'totalIncomeUmumLastMonth', 'spendingThisYear', 'incomeThisYear', 'totalIncomeThisMonthFish'));
     }
 }

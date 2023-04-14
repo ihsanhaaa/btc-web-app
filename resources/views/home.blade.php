@@ -18,14 +18,25 @@
             </div>
             <div class="col-lg-6 col-md-12 mt-5">
                 <div class="card card-transparent stats-card">
+                    <canvas id="chart"></canvas>
                     <div class="card-body">
-                        <canvas id="chart"></canvas>
-                        <div class="stats-info">
+                        <div class="stats-info mt-4">
                             <p class="stats-text my-3">Total Pengeluaran Umum</p>
                             <h6 class="card-title">Rp. {{ number_format((float) $totalSpendingUmum) }}</h6>
                             <p class="stats-text my-2">Pengeluaran Bulan {{ $namaBulan }} sebesar Rp. {{ number_format((float) $spendingUmumThisMonth) }}</p>
                             <p class="stats-text">Pengeluaran Bulan Sebelumnya, Rp. {{ number_format((float) $totalIncomeUmumLastMonth) }}</p>
                         </div>
+                        @if ($spendingUmumThisMonth == 0)
+                            
+                        @elseif ($spendingUmumThisMonth >= $totalIncomeUmumLastMonth)
+                            <div class="stats-icon change-success">
+                                <i class="material-icons">trending_up</i>
+                            </div>
+                        @else
+                            <div class="stats-icon change-danger">
+                                <i class="material-icons">trending_down</i>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -51,13 +62,21 @@
                     <div class="card-body">
                         <div class="stats-info">
                             <p class="stats-text">Total Pemasukan Kolam</p>
-                            <h5 class="card-title">{{ $totalIncomeFish }}<span class="stats-change stats-change-danger">-8%</span></h5>
+                            <h5 class="card-title">{{ $totalIncomeFish }}</h5>
                             <p class="stats-text my-2">Pengeluaran Kolam Bulan {{ $namaBulan }} sebesar Rp. {{ number_format((float) $totalIncomeThisMonthFish) }}</p>
                             <p class="stats-text">Pemasukan Bulan Sebelumnya, Rp. {{ number_format((float) $totalIncomeFishLastMonth) }}</p>
                         </div>
-                        <div class="stats-icon change-danger">
-                            <i class="material-icons">trending_down</i>
-                        </div>
+                        @if ($totalIncomeThisMonthFish == 0)
+                            
+                        @elseif ($totalIncomeThisMonthFish >= $totalIncomeFishLastMonth)
+                            <div class="stats-icon change-success">
+                                <i class="material-icons">trending_up</i>
+                            </div>
+                        @else
+                            <div class="stats-icon change-danger">
+                                <i class="material-icons">trending_down</i>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -71,6 +90,17 @@
                             <p class="stats-text my-2">Pengeluaran Bulan {{ $namaBulan }} sebesar Rp. {{ number_format((float) $spendingKeratomThisMonth) }}</p>
                             <p class="stats-text">Pengeluaran Bulan Sebelumnya, Rp. {{ number_format((float) $totalIncomeKeratomLastMonth) }}</p>
                         </div>
+                        @if ($spendingKeratomThisMonth == 0)
+                            
+                        @elseif ($spendingKeratomThisMonth >= $totalIncomeKeratomLastMonth)
+                            <div class="stats-icon change-success">
+                                <i class="material-icons">trending_up</i>
+                            </div>
+                        @else
+                            <div class="stats-icon change-danger">
+                                <i class="material-icons">trending_down</i>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -83,9 +113,17 @@
                             <p class="stats-text my-2">Pemasukan Bulan {{ $namaBulan }} sebesar Rp. {{ number_format((float) $totalIncomeThisMonthKeratom) }}</p>
                             <p class="stats-text">Pemasukan Bulan Sebelumnya, Rp. {{ number_format((float) $totalIncomeKeratomLastMonth) }}</p>
                         </div>
-                        <div class="stats-icon change-success">
-                            <i class="material-icons">trending_up</i>
-                        </div>
+                        @if ($totalIncomeThisMonthKeratom == 0)
+                            
+                        @elseif ($totalIncomeThisMonthKeratom >= $totalIncomeKeratomLastMonth)
+                            <div class="stats-icon change-success">
+                                <i class="material-icons">trending_up</i>
+                            </div>
+                        @else
+                            <div class="stats-icon change-danger">
+                                <i class="material-icons">trending_down</i>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -106,47 +144,35 @@
         </script>
 
         {{-- data --}}
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
         <script>
             var ctx = document.getElementById('chart').getContext('2d');
             var chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-                    datasets: [
-                        {
-                            label: 'Total Pengeluaran',
-                            data: [
-                                <?php
-                                    foreach($spendingThisYear as $month) {
-                                        echo $month->total_harga . ',';
-                                    }
-                                ?>
-                            ],
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Total Penjualan',
-                            data: [
-                                <?php
-                                    foreach($incomeThisYear as $month) {
-                                        echo $month->total_penjualan . ',';
-                                    }
-                                ?>
-                            ],
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+                    labels: {!! json_encode($labelsIncome) !!},
+                    datasets: [{
+                        label: 'Total Pemasukan',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        data: {!! json_encode($dataIncome) !!}
+                    },
+                    {
+                        label: 'Total Pengeluaran',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        data: {!! json_encode($dataSpending) !!}
+                    }]
                 },
                 options: {
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
                     }
                 }
             });
